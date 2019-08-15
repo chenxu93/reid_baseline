@@ -1,5 +1,5 @@
 # reid_baseline
-A pytorch implement
+A pytorch implement: 《Bag of Tricks and a Strong Baseline for Deep Person Re-Identification》
 
 # requirements
 	pretrained model:

@@ -1,0 +1,73 @@
+MODEL:
+  TYPE: trick_baseline
+  BACKBONE: resnet50
+  LAST_STRIDE: 1
+  USE_BN_NECK_FEATURE: True
+  FEATURE_DIMS: 2048 # 
+
+TRAIN:
+  WEIGHTS: /data2/upchen/pretrained_models/reid_strong_baseline/resnet50/resnet50-19c8e357.pth
+  NORM_FEATURE: True
+  LOSS_TYPE: softmax_triplet
+  LABEL_SMOOTH: True
+  IF_EVAL: False
+  EVAL_FREQ: 10
+  REMOVE_MODULE_FROM_KEYS: False
+
+
+TEST:
+  WEIGHTS: '/data2/upchen/ReID/person-ReID/train_SGD/trick_baseline_epoch100.pth'
+  VISRANK: False
+  VISRANK_TOPK: 20
+  METRIC_CUHK03: False
+  FEATURE_NORMALIZE: True
+  RE_RANKING: False
+  RANKS: [1, 5, 10, 20]
+  DIST_METRIC: euclidean # cosine better
+
+SOLVER:
+  OPTIMIZER: Adam
+  LR_SCHEDULE: multi_step
+  GAMMA: 0.1
+  BASE_LR: 0.0003
+  CENTER_LR: 0.5
+  STEPS: [60, 90, 110]
+  WARMUP_LR: True
+  WARMUP_ITERS : 10
+  WARMUP_FACTOR: 0.01
+  WARMUP_METHOD: linear
+  LAST_EPOCH: -1
+  MAX_EPOCH : 120
+  SAVE_FREQ: 10
+  TOPK: [1, 5, 10]
+  GPU_ID: 1
+
+DATASET:
+  NAMES: ("dukemtmcreid",)
+  # ROOT: /data2/upchen/datasets/reid/Market1501
+  ROOT: /data2/upchen/datasets/reid/DukeMTMCreID
+  SIZE_TRAIN: [384, 128]
+  SIZE_TEST: [384, 128]
+  IMG_PADDING_PIXEL: 10
+  FILP_P: 0.5
+  RANDOM_ERASE_P: 0.5
+  ROTATE_P: 0.0 
+
+DATALOADER:
+  NUM_WORKERS: 0
+  USE_IDENTITY_SAMPLER: True
+  NUM_INSTALCE: 4
+
+LOSS:
+  TRIPLET_MARGIN: 0.3
+  LABEL_SMOOTH_EPSILON: 0.1
+  TRIPLET_LOSS_WEIGHT: 1.0
+  CENTER_LOSS_WEIGHT: 0.0005
+
+RESUME:
+  IF_RESUME: False
+  RESUME_FROM: '.'
+
+OUTPUT:
+  SAVE_MODEL_PATH: log
+
